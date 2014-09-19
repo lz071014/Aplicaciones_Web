@@ -1,0 +1,39 @@
+#frmAdmServices{
+	background-color: lightgrey;
+}
+
+#lblTitulo{
+	top: 15px;
+	width: 25em;
+	height: 50px;
+	font-family: cursive;
+	color: blue;
+}
+
+#Tipo{
+	padding: 2px;
+}
+
+#txtTipo{
+	position: absolute;
+	top: 55px;
+	left: 150px;
+	text-align: center;
+	width: 15em;
+}
+
+#txtDescripcion{
+	position: absolute;
+	top: 90px;
+	left: 150px;
+	text-align: center;
+	width: 15em;
+}
+
+#txtValor{
+	position: absolute;
+	top: 125px;
+	left: 150px;
+	text-align: center;
+	width: 15em;
+}
