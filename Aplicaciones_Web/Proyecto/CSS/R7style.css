@@ -1,4 +1,4 @@
-#frmAdmServices{
+#frmAdmUsers{
 	background-color: lightgrey;
 }
 
@@ -10,7 +10,7 @@
 	color: blue;
 }
 
-#txtTipo{
+#txtCedula{
 	position: absolute;
 	top: 55px;
 	left: 150px;
@@ -19,7 +19,7 @@
 	bor
 }
 
-#txtDescripcion{
+#txtNombre{
 	position: absolute;
 	top: 90px;
 	left: 150px;
@@ -27,9 +27,17 @@
 	width: 15em;
 }
 
-#txtValor{
+#txtApellido{
 	position: absolute;
 	top: 125px;
+	left: 150px;
+	text-align: center;
+	width: 15em;
+}
+
+#txtRol{
+	position: absolute;
+	top: 160px;
 	left: 150px;
 	text-align: center;
 	width: 15em;
