@@ -1,0 +1,44 @@
+#frmAdmUsers{
+	background-color: lightgrey;
+}
+
+#lblTitulo{
+	top: 15px;
+	width: 25em;
+	height: 50px;
+	font-family: cursive;
+	color: blue;
+}
+
+#txtCedula{
+	position: absolute;
+	top: 55px;
+	left: 150px;
+	text-align: center;
+	width: 15em;
+	bor
+}
+
+#txtNombre{
+	position: absolute;
+	top: 90px;
+	left: 150px;
+	text-align: center;
+	width: 15em;
+}
+
+#txtApellido{
+	position: absolute;
+	top: 125px;
+	left: 150px;
+	text-align: center;
+	width: 15em;
+}
+
+#txtRol{
+	position: absolute;
+	top: 160px;
+	left: 150px;
+	text-align: center;
+	width: 15em;
+}
