@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <style>
+        .width25 {
+            width: 25%;
+        }
+
+        .width50 {
+            width: 50%;
+            text-align: center;
+        }
+		
+		.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset .orange {
+			display: inline-block;
+			position: relative;
+			padding: 0;
+			line-height: normal;
+			margin-right: .1em;
+			cursor: pointer;
+			vertical-align: middle;
+			text-align: center;
+			overflow: visible;
+			/* removes extra width in IE */
+			background-color: #F8A82B;
+			background-image: none;
+			color: White;
+		}
+    </style>
+	
+    <script type="text/javascript" src="Scripts/jquery-1.11.1.js"></script>
+    <!-- <script type="text/javascript" src="Scripts/jquery.jqGrid.src.js"></script> -->
+    <script type="text/javascript" src="Scripts/jquery.jqGrid.min.js"></script>
+    <script type="text/javascript" src="Scripts/grid.locale-es.js"></script>
+	<script type="text/javascript" src="Scripts/jquery-ui.js"></script>
+    <script type="text/javascript">
+
+        var data = [
+                { Servicio: "1", Vehiculo: "Automovil", Descripcion: "Lavado General", Valor: "$ 50.000", Editar: "<img id='_img' name='_img' src='Content/arrow_left1.png' heihgt=12px width=12px onclick='Editar(1);' />", Eliminar: "<img id='_img' name='_img' src='Content/xxx.png' heihgt=12px width=12px onclick='DeleteFromList(1);' />" },
+                { Servicio: "2", Vehiculo: "Moto", Descripcion: "Lavado General", Valor: "$ 25.000", Editar: "<img id='_img' name='_img' src='Content/arrow_left1.png' heihgt=12px width=12px onclick='Editar(2);' />", Eliminar: "<img id='_img' name='_img' src='Content/xxx.png' heihgt=12px width=12px onclick='DeleteFromList(2);' />" },
+                { Servicio: "3", Vehiculo: "Automovil", Descripcion: "Polichado", Valor: "$ 30.000", Editar: "<img id='_img' name='_img' src='Content/arrow_left1.png' heihgt=12px width=12px onclick='Editar(3) ;' />", Eliminar: "<img id='_img' name='_img' src='Content/xxx.png' heihgt=12px width=12px onclick='DeleteFromList(3);' />" }
+        ];
+
+		var TipoTran = "";
+		var CodServicioActual = 0;
+		
+        $(document).ready(function () {
+            $("#grdPendingOrders").jqGrid({
+                datatype: "local",
+                height: "auto",
+                colNames: ['Servicio', 'Tipo Vehiculo', 'Descripcion', 'Valor', 'Editar', 'Eliminar'],
+                colModel: [
+                    { name: 'Servicio', sortable: false, resizable: true, align: 'left', hidden: false },
+                    { name: 'Vehiculo', sortable: false, resizable: true, align: 'left', hidden: false },
+                    { name: 'Descripcion', sortable: false, resizable: true, align: 'left', hidden: false },
+                    { name: 'Valor', sortable: false, resizable: true, align: 'left', hidden: false },
+                    { name: 'Editar', sortable: false, resizable: true, align: 'center', hidden: false },
+					{ name: 'Eliminar', sortable: false, resizable: true, align: 'center', hidden: false }
+                ],
+                multiselect: false,
+                caption: ""
+            });
+		
+			$("#_Administracion").dialog({
+				autoOpen: false, 
+				resizable: false, 
+				height: 250, 
+				width: 450, 
+				modal: true 
+			});
+
+            LoadGrid();
+			
+        });
+
+		
+
+		function AbrirPopUp(){
+			$('#_Administracion').dialog('open');
+		}
+		
+        function DeleteFromList(orden) {
+            for (var i = 0; i <= data.length; i++) {
+                if (data[i].Servicio == orden) {
+                    data.splice(i, 1);
+                    break;
+                }
+            }
+
+            LoadGrid();
+        }
+		
+		function Editar(servicio){
+			TipoTran = "U";
+			CodServicioActual = servicio;
+			
+			for( var i = 0 ; i < data.length ; i ++ ){
+				if(data[i].Servicio == servicio){
+					$("#ddlType option:contains(" + data[i].Vehiculo + ")").attr('selected', 'selected');
+					$("#txtDesc").val(data[i].Descripcion);
+					var Val = $("#txtValor").val(data[i].Valor);
+					
+					break;
+				}
+			}
+			
+			AbrirPopUp();
+		}
+		
+		function New(){
+			TipoTran = "I";
+			CleanFields();
+			AbrirPopUp();
+		}
+
+		function ModifyData(orden){debugger;
+		
+			var TipoVehiculo = $("#ddlType option:selected").text();
+			var Desc = $("#txtDesc").val();
+			var Val = $("#txtValor").val();
+			
+			if(TipoTran == "I"){
+				var CodServicio = data.length + 1;
+				data.push({ Servicio: CodServicio, Vehiculo: TipoVehiculo, Descripcion: Desc, Valor: Val, Editar: "<img id='_img' name='_img' src='Content/arrow_left1.png' heihgt=12px width=12px onclick='Editar(" + CodServicio + ") ;' />", Eliminar: "<img id='_img' name='_img' src='Content/xxx.png' heihgt=12px width=12px onclick='DeleteFromList(" + CodServicio + ");' />" });
+			}
+			
+			if(TipoTran == "U"){
+				for( var i = 0 ; i < data.length ; i ++){
+					if(data[i].Servicio == CodServicioActual){
+						
+						data[i].Vehiculo = TipoVehiculo;
+						data[i].Descripcion = Desc;
+						data[i].Valor = Val;
+						break;
+					}
+				}
+			}
+			
+			LoadGrid();
+		}
+		
+        function LoadGrid() {
+            $("#grdPendingOrders").jqGrid("clearGridData");
+            for (var i = 0; i <= data.length; i++)
+                jQuery("#grdPendingOrders").jqGrid('addRowData', i + 1, data[i]);
+        }
+
+		function SaveServices(){
+			var msg = ValidateFields();
+			if(msg == ""){	
+				ModifyData(CodServicioActual);
+				CleanFields();
+				alert("Servicio Creado/Actualizado");
+				$("#_Administracion").dialog("close");
+			}
+			
+			else{
+				alert(msg);
+			}
+		}
+		
+		function CleanFields(){
+			ddlType.value = 0;
+			$("#txtDesc").val("");
+			$("#txtValor").val("");
+		}
+		
+		function ValidateFields(){
+		
+			var message = "";
+			
+			if(ddlType.value == 0){ 
+				message = "El tipo de vehiculo es obligatorio"; 
+				return message;
+			}
+			
+			if($("#txtDesc").val() == ""){ 
+				message = "La descripcion del servicio es obligatoria"; 
+				return message;
+			}
+			
+			if($("#txtValor").val() == ""){ 
+				message = "El valor del servicio es obligatorio"; 
+				return message;
+			}
+			
+			return message;
+		}
+		
+    </script>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+            <table style="width: 100%">
+                <tr>
+                    <td class="width25"></td>
+                    <td class="width50"></td>
+                    <td class="width25"></td>
+                </tr>
+                <tr>
+                    <td class="width25"></td>
+                    <td class="width50">
+						<span id="lblTitulo">Administrar Servicios</span>
+                    </td>
+                    <td class="width25"></td>
+                </tr>
+                <tr>
+                    <td class="width25"></td>
+                    <td class="width50"></td>
+                    <td class="width25"></td>
+                </tr>
+				<tr>
+                    <td class="width25"></td>
+                    <td class="width50"></td>
+                    <td class="width25"></td>
+                </tr>
+				<tr>
+                    <td class="width25"></td>
+                    <td class="width50">
+						<input type="button" value="crear" id="btnCrear" onclick="New();"></input>
+					</td>
+                    <td class="width25"></td>
+                </tr>
+				<tr>
+                    <td class="width25"></td>
+                    <td class="width50"></td>
+                    <td class="width25"></td>
+                </tr>
+                <tr>
+                    <td class="width25"></td>
+                    <td class="width50">
+                        <table>
+                            <tr>
+                                <td>
+                                    <table id="grdPendingOrders">
+                                    </table>
+                                    <div id="grdPendingOrders_Pager" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td class="width25"></td>
+                </tr>
+                <tr>
+                    <td class="width25"></td>
+                    <td class="width50"></td>
+                    <td class="width25"></td>
+                </tr>
+            </table>
+        </div>
+		<div id="_Administracion" style="display: none; border-style: solid; background-color: rgb(255,255,255)" >
+			<table class="width100">
+				<tr>
+					<td class="width25">&nbsp;</td>
+					<td class="width25">&nbsp;</td>
+					<td>&nbsp;</td>
+					<td class="auto-style3">&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td class="width25">
+					</td>
+					<td class="width25"></td>
+					<td></td>
+					<td class="auto-style3"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="width25">&nbsp;</td>
+					<td class="width25">&nbsp;</td>
+					<td>&nbsp;</td>
+					<td class="auto-style3">&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				
+				<tr>
+					<td class="width25"></td>
+					<td class="width25">
+						<span id="lblType">Tipo</span>
+					</td>
+					<td></td>
+					<td class="width25">
+						<select name="ddlType" id="ddlType" Class="width100">
+							<option value="0">-- Seleccione --</option>
+							<option value="1">Automovil</option>
+							<option value="2">Camioneta</option>
+							<option value="3">Camion</option>
+							<option value="4">Moto</option>
+						</select>
+					</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="width25"></td>
+					<td class="width25">
+						<span id="lblDesc">Descripcion</span>
+					</td>
+					<td></td>
+					<td class="width25">
+						<input name="txtDesc" type="text" id="txtDesc" Class="width100" />
+					</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="width25"></td>
+					<td class="width25">
+						<span id="lblValor">Valor</span>
+					</td>
+					<td></td>
+					<td class="width25">
+						<input name="txtValor" type="text" id="txtValor" Class="width100" />
+					</td>
+					<td></td>
+				</tr>
+				
+				<tr>
+					<td class="width25"></td>
+					<td class="width25"></td>
+					<td></td>
+					<td class="width25"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="width25"></td>
+					<td class="width50" colspan="3" >
+						<input type="button" name="saveServices" value="Guardar" id="saveServices" class="width50" onClick="SaveServices();" />
+					</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="width25"></td>
+					<td class="width25">
+					</td>
+					<td></td>
+					<td class="width25"></td>
+					<td></td>
+				</tr>
+			</table>
+		</div>
+    </form>
+</body>
+</html>

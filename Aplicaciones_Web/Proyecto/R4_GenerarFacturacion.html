@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <style>
+        .width25 {
+            width: 25%;
+        }
+
+        .width50 {
+            width: 50%;
+            text-align: center;
+        }
+    </style>
+    <script type="text/javascript" src="Scripts/jquery-1.11.1.js"></script>
+    <!-- <script type="text/javascript" src="Scripts/jquery.jqGrid.src.js"></script> -->
+    <script type="text/javascript" src="Scripts/jquery.jqGrid.min.js"></script>
+    <script type="text/javascript" src="Scripts/grid.locale-es.js"></script>
+    <script type="text/javascript">
+
+        var data = [
+			{ Orden: "1", Propietario: "Pedro Perez", Placa: "ABC123", Modelo: "2014", Marca: "chevrolet", Atendido_Por: "Pepito Perez", Generar: "<img id='_img' name='_img' src='Content/arrow_left1.png' heihgt=12px width=12px onclick='GenerateBill(1);' />" },
+			{ Orden: "2", Propietario: "Mario Gomez", Placa: "DEF456", Modelo: "2010", Marca: "hyundai", Atendido_Por: "German Gonzalez", Generar: "<img id='_img' name='_img' src='Content/arrow_left1.png' heihgt=12px width=12px onclick='GenerateBill(2);' />" },
+			{ Orden: "3", Propietario: "Fernanda Martinez", Placa: "GHI789", Modelo: "2014", Marca: "renault", Atendido_Por: "Pepito Perez", Generar: "<img id='_img' name='_img' src='Content/arrow_left1.png' heihgt=12px width=12px onclick='GenerateBill(3);' />" }
+        ];
+		
+		var dataBill = [
+			{ Cod_Servicio: "1", Detalle: "Lavado", Valor: "$5.000"},
+			{ Cod_Servicio: "1", Detalle: "Polichado", Valor: "$7.000"}
+		];
+
+        $(document).ready(function () {
+		
+            $("#grdPendingOrders").jqGrid({
+                datatype: "local",
+                height: "auto",
+                colNames: ['Orden', 'Propiertario', 'Placa', 'Modelo', 'Marca', 'Atendido Por', 'Generar'],
+                colModel: [
+                    { name: 'Orden', sortable: false, resizable: true, align: 'center', hidden: false },
+                    { name: 'Propietario', sortable: false, resizable: true, align: 'left', hidden: false },
+                    { name: 'Placa', sortable: false, resizable: true, align: 'center', hidden: false },
+                    { name: 'Modelo', sortable: false, resizable: true, align: 'center', hidden: false },
+                    { name: 'Marca', sortable: false, resizable: true, align: 'left', hidden: false },
+					{ name: 'Atendido_Por', sortable: false, resizable: true, align: 'center', hidden: false },
+                    { name: 'Generar', sortable: false, resizable: true, align: 'center', hidden: false }
+                ],
+                multiselect: false,
+                caption: ""
+            });
+
+            LoadGrid();
+
+			$("#grdDetailBill").jqGrid({
+                datatype: "local",
+                height: "auto",
+                colNames: ['Cod_Servicio', 'Detalle', 'Valor'],
+                colModel: [
+                    { name: 'Cod_Servicio', sortable: false, resizable: true, align: 'center', hidden: false },
+                    { name: 'Detalle', sortable: false, resizable: true, align: 'left', hidden: false },
+                    { name: 'Valor', sortable: false, resizable: true, align: 'center', hidden: false }
+                ],
+                multiselect: false,
+                caption: ""
+            });
+
+            LoadGridBill();
+			
+			$("#factura").hide();
+        });
+
+        function GenerateBill(orden) {		
+            for (var i = 0; i <= data.length; i++) {
+                if (data[i].Orden == orden) {
+				
+					//Generacion de Factura
+					$("#txtPropietario").val(data[i].Propietario);
+					$("#txtPlaca").val(data[i].Placa);
+					$("#txtAtendidoPor").val(data[i].Atendido_Por);
+					$("#txtOrden").val(data[i].Orden);
+					
+					$("#factura").show();
+
+                    data.splice(i, 1);
+                    break;
+                }
+            }
+			
+			LoadGrid();
+        }
+
+        function LoadGrid() {
+            $("#grdPendingOrders").jqGrid("clearGridData");
+            for (var i = 0; i <= data.length; i++)
+                jQuery("#grdPendingOrders").jqGrid('addRowData', i + 1, data[i]);
+        }
+		
+		function LoadGridBill() {
+            $("#grdDetailBill").jqGrid("clearGridData");
+            for (var i = 0; i <= dataBill.length; i++)
+                jQuery("#grdDetailBill").jqGrid('addRowData', i + 1, dataBill[i]);
+        }
+		
+		function Imprimir(){
+			$("#factura").hide();
+		}
+		
+    </script>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+            <table>
+                <tr>
+                    <td class="width25"></td>
+                    <td class="width50"></td>
+                    <td class="width25"></td>
+                </tr>
+                <tr>
+                    <td class="width25"></td>
+                    <td class="width50">
+						<span id="lblTitulo">Ordenes Pendientes Por Facturacion</span>
+                    </td>
+                    <td class="width25"></td>
+                </tr>
+                <tr>
+                    <td class="width25"></td>
+                    <td class="width50"></td>
+                    <td class="width25"></td>
+                </tr>
+                <tr>
+                    <td class="width25"></td>
+                    <td class="width50">					
+						<table>
+							<tr>
+								<td>
+									<table id="grdPendingOrders">
+									</table>
+									<div id="grdPendingOrders_Pager" />
+								</td>
+							</tr>
+						</table>
+                    </td>
+                    <td class="width25"></td>
+                </tr>
+                <tr>
+                    <td class="width25"></td>
+                    <td class="width50"></td>
+                    <td class="width25"></td>
+                </tr>
+				<tr>
+                    <td></td>
+                    <!-- <td class="width50" id="factura"> -->
+					<td id="factura">
+						<fieldset>
+							<legend>Factura</legend>
+							<table id="ServicesTable">
+								<tr>
+									<td>
+										<fieldset>
+											<legend>Datos Personales</legend>
+											<table>
+												<tr>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+												</tr>
+												<tr>
+													<td></td>
+													<td>
+														<span id="lblPropietario">Propietario</span>
+													</td>
+													<td>
+														<input name="txtPropietario" type="text" id="txtPropietario"/>
+													</td>
+													<td></td>
+												</tr>
+												<tr>
+													<td></td>
+													<td>
+														<span id="lblPlaca">Placa</span>
+													</td>
+													<td>
+														<input name="txtPlaca" type="text" id="txtPlaca"/>
+													</td>
+													<td></td>
+												</tr>
+												<tr>
+													<td></td>
+													<td>
+														<span id="lblAtendidoPor">Atendido Por</span>
+													</td>
+													<td>
+														<input name="txtAtendidoPor" type="text" id="txtAtendidoPor" />
+													</td>
+													<td></td>
+												</tr>
+												<tr>
+													<td></td>
+													<td>
+														<span id="lblOrden">Orden No.</span>
+													</td>
+													<td>
+														<input name="txtOrden" type="text" id="txtOrden"/>
+													</td>
+													<td></td>
+												</tr>
+												<tr>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+												</tr>
+											</table>
+										</fieldset> 
+									<td/>
+								</tr>
+								<tr>
+									<td>
+										<fieldset>
+											<legend>Detalle Factura</legend>
+											<table>
+												<tr>
+													<td>
+														<table id="grdDetailBill">
+														</table>
+														<div id="grdDetailBill_Pager" />
+													</td>
+												</tr>
+											</table>
+											<table>
+												<tr>
+													<td>
+														<tr>
+															<span id="lblTotalFactura">Total Factura</span>
+														</tr>
+														<tr>
+															<span id="lblTotalFactura">$ 13.000</span>
+														</tr>
+													</td>
+												</tr>
+											</table>
+										</fieldset> 
+									<td/>
+								</tr>
+							</table>
+						</fieldset>
+						<table>
+							<tr></tr>
+							<tr>
+								<input type="button" name="btnImprimir" value="Imprimir Factura" id="btnImprimir" onClick="Imprimir();"/>
+							</tr>
+						</table>
+					</td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </form>
+</body>
+</html>

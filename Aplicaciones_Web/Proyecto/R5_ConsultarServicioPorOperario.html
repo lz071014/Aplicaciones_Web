@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>CONSULTAR SERVICIOS POR OPERARIO</title>
+	<link rel="stylesheet" type="text/css" href="CSS/style.css">
+</head>
+<body>
+	<form method="post" action="WebForm5.aspx" id="frmConsOperario">
+		<div>
+			<p>
+				<span id="lblTitulo">CONSULTAR SERVICIOS POR OPERARIO</span>
+			</p>
+			<p><span>Seleccione Operario</span></p>
+			<select name="txtOperario" id="txtOperario"></select>
+			
+			<div class="fechaini">
+				<span>Fecha Inicial: dd/mm/aaaa</span>
+				<select name="idd" id="idd"></select>	
+				<select name="imm" id="imm"></select>
+				<select name="iaaaa" id="iaaaa"></select>	
+			</div>
+			
+			<div class="fechafin">
+				<span>Fecha Final: dd/mm/aaaa</span>
+				<select name="fdd" id="fdd"></select>
+				<select name="fmm" id="fmm"></select>
+				<select name="faaaa" id="faaaa" Class="width100"em></select>
+					
+			</div>
+			
+			<div>
+				<button id="consultar" type="button" >CONSULTAR</button>
+			</div>
+		
+		</div>
+		
+	</form>
+</body>
+</html>
